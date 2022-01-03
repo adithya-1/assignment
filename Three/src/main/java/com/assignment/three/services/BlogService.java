@@ -3,12 +3,12 @@ package com.assignment.three.services;
 import com.assignment.three.core.Author;
 import com.assignment.three.core.Blog;
 import com.assignment.three.core.User;
-import com.assignment.three.dataTransfer.BlogDataTransfer;
+import com.assignment.three.dataTransfer.BlogDTO;
 import com.assignment.three.db.BlogDAO;
 import com.assignment.three.generators.AuthorsPerPageGenerator;
 import com.assignment.three.generators.HTTPResponseGenerator;
 import com.assignment.three.generators.TotalPageValueGenerator;
-import com.assignment.three.mapper.BlogToDataTransferMapper;
+import com.assignment.three.mapper.BlogToBlogDTOMapper;
 
 
 import javax.ws.rs.core.Response;
@@ -23,7 +23,7 @@ public class BlogService {
         }
         Optional<Blog> optionalBlog= blogDAO.findBlogByIdDAO(blogId);
         if(optionalBlog.isPresent()){
-            return HTTPResponseGenerator.userQueryResponse(BlogToDataTransferMapper.blogToTransferMapperMethod(optionalBlog.get()));
+            return HTTPResponseGenerator.userQueryResponse(BlogToBlogDTOMapper.mapper(optionalBlog.get()));
         }else{
             return  HTTPResponseGenerator.notFoundResponse();
         }
@@ -47,9 +47,9 @@ public class BlogService {
             return HTTPResponseGenerator.badRequestResponse();
         }else{
             Integer totalPage= TotalPageValueGenerator.generate(blogList,perPage);
-            List<BlogDataTransfer> data=new ArrayList();
+            List<BlogDTO> data=new ArrayList();
             for(Blog b:subList){
-                data.add(BlogToDataTransferMapper.blogToTransferMapperMethod(b));
+                data.add(BlogToBlogDTOMapper.mapper(b));
             }
             Map<String,Object> outPut=new HashMap<String,Object>(){{
                 put("pageNo",pageNo);

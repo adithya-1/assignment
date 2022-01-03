@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BlogDataTransfer {
+public class BlogDTO {
     private Integer blogId;
     private  String blogName;
     private String blogContent;
