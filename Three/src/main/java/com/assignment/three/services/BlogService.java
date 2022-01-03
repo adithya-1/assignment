@@ -8,7 +8,7 @@ import com.assignment.three.db.BlogDAO;
 import com.assignment.three.generators.AuthorsPerPageGenerator;
 import com.assignment.three.generators.HTTPResponseGenerator;
 import com.assignment.three.generators.TotalPageValueGenerator;
-import com.assignment.three.mapper.BlogToBlogDTOMapper;
+import com.assignment.three.mapper.BlogMapper;
 
 
 import javax.ws.rs.core.Response;
@@ -23,7 +23,7 @@ public class BlogService {
         }
         Optional<Blog> optionalBlog= blogDAO.findBlogByIdDAO(blogId);
         if(optionalBlog.isPresent()){
-            return HTTPResponseGenerator.userQueryResponse(BlogToBlogDTOMapper.mapper(optionalBlog.get()));
+            return HTTPResponseGenerator.userQueryResponse(BlogMapper.INSTANCE.blogToBLogDto(optionalBlog.get()));
         }else{
             return  HTTPResponseGenerator.notFoundResponse();
         }
@@ -49,7 +49,7 @@ public class BlogService {
             Integer totalPage= TotalPageValueGenerator.generate(blogList,perPage);
             List<BlogDTO> data=new ArrayList();
             for(Blog b:subList){
-                data.add(BlogToBlogDTOMapper.mapper(b));
+                data.add(BlogMapper.INSTANCE.blogToBLogDto(b));
             }
             Map<String,Object> outPut=new HashMap<String,Object>(){{
                 put("pageNo",pageNo);
@@ -64,7 +64,7 @@ public class BlogService {
 
 
     public  static Response create(BlogDAO blogDAO, User user, Blog blog){
-        if(blog==null||blog.getBlogId()==null ||
+        if(blog==null ||
                 blog.getBlogName()==null || blog.getBlogContent()==null){
             return HTTPResponseGenerator.badRequestResponse();
         }
